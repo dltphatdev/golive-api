@@ -50,3 +50,7 @@ Golive-root/
 ├── .gitignore
 ├── package.json
 └── README.md
+
+## 🧬 Task Project
+
+- User API: Register, Login, Logout, Forgot Password, Verify Account, Refresh Token Expires In, Change Password, Get Profile, Update Profile, Change Password, Upload Avatar Profile, Login with remember me

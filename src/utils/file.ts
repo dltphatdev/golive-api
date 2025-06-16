@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { Request } from 'express'
 import formidable, { File } from 'formidable'
-import { UPLOAD_IMAGE_DIR, UPLOAD_IMAGE_TEMP_DIR, UPLOAD_IMAGES_DIR, UPLOAD_IMAGES_TEMP_DIR } from '@/constants/dir'
+import { UPLOAD_IMAGE_DIR, UPLOAD_IMAGES_DIR } from '@/constants/dir'
 
 export const getNameFromFullname = (fullname: string) => {
   const fullnameArray = fullname.split('.')
@@ -15,7 +15,7 @@ export const getExt = (fullname: string) => {
 }
 
 export const initFolder = () => {
-  const directTemps = [UPLOAD_IMAGE_DIR, UPLOAD_IMAGES_DIR, UPLOAD_IMAGE_TEMP_DIR, UPLOAD_IMAGES_TEMP_DIR]
+  const directTemps = [UPLOAD_IMAGE_DIR, UPLOAD_IMAGES_DIR]
   directTemps.forEach((directTemp) => {
     if (!fs.existsSync(directTemp)) {
       fs.mkdirSync(directTemp, {
@@ -26,7 +26,7 @@ export const initFolder = () => {
 }
 
 export const uploadImage = async (req: Request) => {
-  const uploadDir = UPLOAD_IMAGE_TEMP_DIR
+  const uploadDir = UPLOAD_IMAGE_DIR
   const form = formidable({
     uploadDir,
     keepExtensions: true,
@@ -56,7 +56,7 @@ export const uploadImage = async (req: Request) => {
 
 export const uploadImages = async (req: Request) => {
   const formidable = (await import('formidable')).default
-  const uploadDir = UPLOAD_IMAGES_TEMP_DIR
+  const uploadDir = UPLOAD_IMAGES_DIR
   const form = formidable({
     uploadDir,
     maxFiles: 10,

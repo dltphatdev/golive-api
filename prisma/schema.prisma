@@ -20,19 +20,21 @@ enum UserVerifyStatus {
 }
 
 model User {
-  id            Int              @id @default(autoincrement())
-  email         String           @unique
-  password      String
-  fullname      String?
-  verify        UserVerifyStatus @default(Unverified)
-  avatar        String?          @db.VarChar(255)
-  address       String?
-  phone         String
-  date_of_birth DateTime?
-  created_at    DateTime         @default(now())
-  updated_at    DateTime?
+  id                    Int              @id @default(autoincrement())
+  email                 String           @unique
+  forgot_password_token String?
+  email_verify_token    String?
+  password              String
+  fullname              String?
+  verify                UserVerifyStatus @default(Unverified)
+  avatar                String?          @db.VarChar(255)
+  address               String?
+  phone                 String?
+  date_of_birth         DateTime?
+  created_at            DateTime         @default(now())
+  updated_at            DateTime?
 
-  @@index([email, password])
+  @@index([password])
 }
 
 model RefreshToken {
