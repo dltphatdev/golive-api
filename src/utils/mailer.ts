@@ -37,9 +37,17 @@ export const sendMail = ({ email, subject, html }: SendMail) => {
 
 export const verifySendMail = ({ email, subject, token }: Pick<SendMail, 'email' | 'subject'> & { token: string }) => {
   const html = htmlverifySendMail
-    .replace('{{title}}', 'Vui lòng kiểm tra mã xác thực tài khoản')
-    .replace('{{content}}', 'Nhập mã xác thực tài khoản')
-    .replace('{{code}}', `${token}`)
+    .replace('{{title}}', 'Thư xác thực đăng ký tài khoản')
+    .replace(
+      '{{content}}',
+      `<p>Cảm ơn bạn đã đăng ký tài khoản tại <strong>Golive App</strong>.</p>
+        <p>
+          Để hoàn tất quá trình đăng ký, vui lòng xác thực địa chỉ email của bạn bằng cách
+          nhấn vào nút bên dưới:
+        </p>`
+    )
+    .replace('{{link}}', `${CONFIG_ENV.CLIENT_APP_URL}/verify-email?token=${token}`)
+    .replace('{{titleLink}}', 'Xác thực')
   return sendMail({ email, subject, html })
 }
 
@@ -49,8 +57,13 @@ export const forgotPasswordSendMail = ({
   token
 }: Pick<SendMail, 'email' | 'subject'> & { token: string }) => {
   const html = htmlverifySendMail
-    .replace('{{title}}', 'Vui lòng kiểm tra mã xác thực tài khoản')
-    .replace('{{content}}', 'Nhập mã xác minh lấy lại mật khẩu')
-    .replace('{{code}}', `${token}`)
+    .replace('{{title}}', 'Thư yêu cầu đặt lại mật khẩu')
+    .replace(
+      '{{content}}',
+      `<p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn trên <strong>[Tên Ứng Dụng]</strong>.</p>
+    <p>Nếu đó là bạn, vui lòng nhấn vào nút bên dưới để đặt lại mật khẩu:</p>`
+    )
+    .replace('{{link}}', `${CONFIG_ENV.CLIENT_APP_URL}/reset-password?token=${token}`)
+    .replace('{{titleLink}}', 'Đặt lại mật khẩu')
   return sendMail({ email, subject, html })
 }
