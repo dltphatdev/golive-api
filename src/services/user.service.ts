@@ -3,7 +3,7 @@ import { TokenType } from '@/constants/enum'
 import MSG from '@/constants/msg'
 import { prisma } from '@/index'
 import { RegisterRequestBody, UpdateProfileReqBody } from '@/models/requests/user.request'
-import { convertToSeconds } from '@/utils/common'
+import { convertToSeconds, generateRandomUppercaseString } from '@/utils/common'
 import { hashPassword } from '@/utils/crypto'
 import { signToken, verifyToken } from '@/utils/jwt'
 import { forgotPasswordSendMail, verifySendMail } from '@/utils/mailer'
@@ -149,42 +149,31 @@ class UserService {
   }
 
   async register(payload: RegisterRequestBody) {
+    const verifyCode = generateRandomUppercaseString() // mã 6 ký tự
     const { email, password } = payload
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashPassword(password)
+        password: hashPassword(password),
+        verify_code: verifyCode
       }
     })
     const user_id = user.id
 
-    const [tokens, email_verify_token] = await Promise.all([
-      this.signAccessTokenRefreshToken({ user_id: user_id, verify: UserVerifyStatus.Unverified }),
-      this.signEmailVerifyToken({ user_id: user_id, verify: UserVerifyStatus.Unverified })
-    ])
-    const [access_token, refresh_token] = tokens
+    const [access_token, refresh_token] = await this.signAccessTokenRefreshToken({
+      user_id: user_id,
+      verify: UserVerifyStatus.Unverified
+    })
     const { iat, exp } = await this.decodeRefreshToken(refresh_token)
-
-    await Promise.all([
-      prisma.user.update({
-        where: {
-          id: user_id
-        },
-        data: {
-          email_verify_token,
-          updated_at: new Date()
-        }
-      }),
-      prisma.refreshToken.create({
-        data: {
-          token: refresh_token,
-          iat: new Date(iat * 1000),
-          exp: new Date(exp * 1000),
-          user_id
-        }
-      }),
-      verifySendMail({ email, subject: `Verify your email`, token: email_verify_token })
-    ])
+    await prisma.refreshToken.create({
+      data: {
+        token: refresh_token,
+        iat: new Date(iat * 1000),
+        exp: new Date(exp * 1000),
+        user_id
+      }
+    })
+    await verifySendMail({ email, subject: `Verify your email`, code: user.verify_code as string })
     const expires_access_token = convertToSeconds(CONFIG_ENV.JWT_ACCESS_TOKEN_EXPIRES_IN)
     const expires_refresh_token = convertToSeconds(CONFIG_ENV.JWT_REFRESH_TOKEN_EXPIRES_IN)
     return {
@@ -244,14 +233,14 @@ class UserService {
     }
   }
 
-  async verifyEmailToken(user_id: number) {
+  async verifyEmail(user_id: number) {
     await prisma.user.update({
       where: {
         id: user_id
       },
       data: {
         verify: UserVerifyStatus.Verified,
-        email_verify_token: null,
+        verify_code: null,
         updated_at: new Date()
       }
     })

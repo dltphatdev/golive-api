@@ -343,36 +343,27 @@ export const resetPasswordValidator = validate(
 export const verifyEmailValidator = validate(
   checkSchema(
     {
-      email_verify_token: {
+      verify_code: {
         isString: true,
         trim: true,
         custom: {
           options: async (value: string, { req }) => {
             if (!value) {
               throw new ErrorsWithStatus({
-                message: MSG.EMAIL_VERIFY_TOKEN_IS_REQUIRED,
+                message: MSG.VERIFY_CODE_IS_REQUIRED,
                 status: HTTP_STATUS_CODE.UNAUTHORIZED
               })
             }
 
             try {
-              const decode_email_verify_token = await verifyToken({
-                token: value,
-                secretOrPublicKey: CONFIG_ENV.JWT_EMAIL_VERIFY_TOKEN_SECRET_KEY
-              })
-              const { user_id } = decode_email_verify_token
-              const user = await prisma.user.findUnique({
+              const user = await prisma.user.findFirst({
                 where: {
-                  id: user_id
+                  verify_code: value
                 }
               })
               if (user === null) {
                 throw new Error(MSG.USER_NOT_FOUND)
               }
-              if (user.email_verify_token === '') {
-                throw new Error(MSG.ACCOUNT_IS_VERIFIED)
-              }
-              ;(req as Request).decode_email_verify_token = decode_email_verify_token
               return true
             } catch (error) {
               if (error instanceof JsonWebTokenError) {

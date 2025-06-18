@@ -22,8 +22,8 @@ enum UserVerifyStatus {
 model User {
   id                    Int              @id @default(autoincrement())
   email                 String           @unique
-  forgot_password_token String?
-  email_verify_token    String?
+  forgot_password_token String?          @db.Text
+  verify_code           String?
   password              String
   fullname              String?
   verify                UserVerifyStatus @default(Unverified)

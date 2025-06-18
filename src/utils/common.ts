@@ -38,3 +38,13 @@ export function convertToSeconds(exp: string): number {
       throw new Error(`Unsupported unit: ${unit}`)
   }
 }
+
+export function generateRandomUppercaseString(length = 6) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    result += characters[randomIndex]
+  }
+  return result
+}

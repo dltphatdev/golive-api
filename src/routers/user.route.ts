@@ -11,7 +11,7 @@ import {
   resetPasswordController,
   updateProfileController,
   uploadAvatarController,
-  verifyEmailTokenController
+  verifyEmailController
 } from '@/controllers/user.controller'
 import {
   accessTokenValidator,
@@ -43,9 +43,9 @@ userRouter.post(`${PREFIX_USER}/register`, registerValidator, wrapRequestHandler
  * Description: Verify user account for send email
  * Path: /verify-email
  * Method: POST
- * Request body: { email_verify_token: string }
+ * Request body: { verify_code: string }
  * */
-userRouter.post('/verify-email', verifyEmailValidator, wrapRequestHandler(verifyEmailTokenController))
+userRouter.post('/verify-email', verifyEmailValidator, wrapRequestHandler(verifyEmailController))
 
 /**
  * Description: Login User Account
