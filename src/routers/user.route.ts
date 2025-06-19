@@ -11,7 +11,7 @@ import {
   resetPasswordController,
   updateProfileController,
   uploadAvatarController,
-  verifyEmailController
+  verifyUserController
 } from '@/controllers/user.controller'
 import {
   accessTokenValidator,
@@ -23,7 +23,7 @@ import {
   resetPasswordValidator,
   updateProfileValidator,
   verifiedUserValidator,
-  verifyEmailValidator
+  verifyUserValidator
 } from '@/middlewares/user.middleware'
 import { wrapRequestHandler } from '@/utils/handler'
 import { filterMiddleware } from '@/middlewares/common.middleware'
@@ -35,7 +35,7 @@ const userRouter = Router()
  * Description: Register User Account
  * Method: POST
  * Path: /register
- * Request body: { email: string; password: string; date_of_birth: string; gender: 'Male' | 'Female' }
+ * Request body: { email: string; password: string; date_of_birth: string; gender: 'Male' | 'Female' ; fullname: string }
  * */
 userRouter.post(`${PREFIX_USER}/register`, registerValidator, wrapRequestHandler(registerController))
 
@@ -45,7 +45,7 @@ userRouter.post(`${PREFIX_USER}/register`, registerValidator, wrapRequestHandler
  * Method: POST
  * Request body: { verify_code: string }
  * */
-userRouter.post('/verify-email', verifyEmailValidator, wrapRequestHandler(verifyEmailController))
+userRouter.post(`${PREFIX_USER}/verify-email`, verifyUserValidator, wrapRequestHandler(verifyUserController))
 
 /**
  * Description: Login User Account

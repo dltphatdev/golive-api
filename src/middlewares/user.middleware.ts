@@ -160,6 +160,16 @@ const forgotPasswordCodeSchema: ParamSchema = {
   }
 }
 
+const genderSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: MSG.GENDER_IS_REQUIRED
+  },
+  isIn: {
+    options: [userGender],
+    errorMessage: MSG.GENDER_INVALID
+  }
+}
+
 export const accessTokenValidator = validate(
   checkSchema(
     {
@@ -273,7 +283,14 @@ export const loginValidator = validate(
           }
         }
       },
-      password: passwordSchema
+      password: passwordSchema,
+      remember_me: {
+        isBoolean: {
+          errorMessage: MSG.REMEMBER_ME_IS_BOOLEAN
+        },
+        toBoolean: true,
+        optional: true
+      }
     },
     ['body']
   )
@@ -299,15 +316,9 @@ export const registerValidator = validate(
       },
       password: passwordSchema,
       date_of_birth: dateOfBirthSchema,
-      gender: {
-        notEmpty: {
-          errorMessage: MSG.GENDER_IS_REQUIRED
-        },
-        isIn: {
-          options: [userGender],
-          errorMessage: MSG.GENDER_INVALID
-        }
-      }
+      gender: genderSchema,
+      fullname: fullnameSchema,
+      phone: phoneSchema
     },
     ['body']
   )
@@ -320,15 +331,15 @@ export const forgotPasswordValidator = validate(
         ...emailSchema,
         custom: {
           options: async (value: string, { req }) => {
-            const member = await prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
               where: {
                 email: value
               }
             })
-            if (!member) {
+            if (!user) {
               throw new Error(MSG.USER_NOT_FOUND)
             }
-            ;(req as Request).user = member
+            ;(req as Request).user = user
             return true
           }
         }
@@ -348,7 +359,7 @@ export const resetPasswordValidator = validate(
   )
 )
 
-export const verifyEmailValidator = validate(
+export const verifyUserValidator = validate(
   checkSchema(
     {
       verify_code: {
@@ -372,6 +383,7 @@ export const verifyEmailValidator = validate(
               if (user === null) {
                 throw new Error(MSG.USER_NOT_FOUND)
               }
+              ;(req as Request).user = user
               return true
             } catch (error) {
               if (error instanceof JsonWebTokenError) {
@@ -441,6 +453,10 @@ export const updateProfileValidator = validate(
       },
       avatar: {
         ...avatarSchema,
+        optional: true
+      },
+      gender: {
+        ...genderSchema,
         optional: true
       },
       address: {

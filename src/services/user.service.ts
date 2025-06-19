@@ -7,7 +7,7 @@ import { convertToSeconds, generateRandomDigitString, generateRandomUppercaseStr
 import { hashPassword } from '@/utils/crypto'
 import { signToken, verifyToken } from '@/utils/jwt'
 import { forgotPasswordSendMail, verifySendMail } from '@/utils/mailer'
-import { UserVerifyStatus } from '@prisma/client'
+import { UserGender, UserVerifyStatus } from '@prisma/client'
 
 class UserService {
   private signAccessToken({
@@ -123,12 +123,16 @@ class UserService {
 
   async register(payload: RegisterRequestBody) {
     const verifyCode = generateRandomDigitString()
-    const { email, password } = payload
     const user = await prisma.user.create({
       data: {
-        email,
-        password: hashPassword(password),
-        verify_code: verifyCode
+        fullname: payload.fullname,
+        phone: payload.phone,
+        gender: payload.gender || UserGender.Male,
+        email: payload.email,
+        password: hashPassword(payload.password),
+        verify_code: verifyCode,
+        date_of_birth: payload.date_of_birth,
+        verify: UserVerifyStatus.Unverified
       }
     })
     const user_id = user.id
@@ -146,7 +150,7 @@ class UserService {
         user_id
       }
     })
-    await verifySendMail({ email, subject: `Verify your email`, code: user.verify_code as string })
+    await verifySendMail({ email: payload.email, subject: `Verify your email`, code: user.verify_code as string })
     const expires_access_token = convertToSeconds(CONFIG_ENV.JWT_ACCESS_TOKEN_EXPIRES_IN)
     const expires_refresh_token = convertToSeconds(CONFIG_ENV.JWT_REFRESH_TOKEN_EXPIRES_IN)
     return {

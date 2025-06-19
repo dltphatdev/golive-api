@@ -43,7 +43,8 @@ const MSG = {
   FORGOT_PASSWORD_CODE_IS_REQUIRED: 'Forgot password code is required',
   FORGOT_PASSWORD_CODE_INVALID: 'Forgot password code invalid',
   GENDER_INVALID: 'Gender invalid',
-  GENDER_IS_REQUIRED: 'Gender is required'
+  GENDER_IS_REQUIRED: 'Gender is required',
+  REMEMBER_ME_IS_BOOLEAN: 'Remember must be a boolean (true or false)'
 } as const
 
 export default MSG

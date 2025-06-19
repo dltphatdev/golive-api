@@ -25,6 +25,8 @@ export interface RegisterRequestBody {
   password: string
   date_of_birth: string
   gender: UserGender
+  fullname: string
+  phone: string
 }
 
 export interface ForgotPasswordReqBody {

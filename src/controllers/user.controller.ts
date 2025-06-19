@@ -26,9 +26,9 @@ export const registerController = async (req: Request<ParamsDictionary, any, Reg
   return
 }
 
-export const verifyEmailController = async (req: Request<ParamsDictionary, any, any>, res: Response) => {
-  const { user_id } = req.decode_email_verify_token as TokenPayLoad
-  const result = await userService.verifyEmail(user_id)
+export const verifyUserController = async (req: Request<ParamsDictionary, any, any>, res: Response) => {
+  const { id } = req.user as User
+  const result = await userService.verifyEmail(id)
   res.json(result)
   return
 }
