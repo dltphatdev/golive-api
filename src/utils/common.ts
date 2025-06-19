@@ -48,3 +48,13 @@ export function generateRandomUppercaseString(length = 6) {
   }
   return result
 }
+
+export function generateRandomDigitString(length = 6) {
+  const digits = '0123456789'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * digits.length)
+    result += digits[randomIndex]
+  }
+  return result
+}

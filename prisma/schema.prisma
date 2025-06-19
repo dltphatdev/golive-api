@@ -19,20 +19,26 @@ enum UserVerifyStatus {
   Banned
 }
 
+enum UserGender {
+  Male
+  FeMale
+}
+
 model User {
-  id                    Int              @id @default(autoincrement())
-  email                 String           @unique
-  forgot_password_token String?          @db.Text
-  verify_code           String?
-  password              String
-  fullname              String?
-  verify                UserVerifyStatus @default(Unverified)
-  avatar                String?          @db.VarChar(255)
-  address               String?
-  phone                 String?
-  date_of_birth         DateTime?
-  created_at            DateTime         @default(now())
-  updated_at            DateTime?
+  id                   Int              @id @default(autoincrement())
+  email                String           @unique
+  forgot_password_code String?
+  verify_code          String?
+  password             String
+  fullname             String?
+  verify               UserVerifyStatus @default(Unverified)
+  avatar               String?          @db.VarChar(255)
+  address              String?
+  phone                String?
+  gender               UserGender       @default(Male)
+  date_of_birth        DateTime?
+  created_at           DateTime         @default(now())
+  updated_at           DateTime?
 
   @@index([password])
 }

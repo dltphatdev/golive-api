@@ -35,7 +35,7 @@ const userRouter = Router()
  * Description: Register User Account
  * Method: POST
  * Path: /register
- * Request body: { email: string; password: string }
+ * Request body: { email: string; password: string; date_of_birth: string; gender: 'Male' | 'Female' }
  * */
 userRouter.post(`${PREFIX_USER}/register`, registerValidator, wrapRequestHandler(registerController))
 

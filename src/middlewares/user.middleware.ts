@@ -11,8 +11,11 @@ import { CONFIG_ENV } from '@/constants/config'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import userService from '@/services/user.service'
-import { UserVerifyStatus } from '@prisma/client'
+import { UserGender, UserVerifyStatus } from '@prisma/client'
 import { TokenPayLoad } from '@/models/requests/user.request'
+import { stringEnumToArray } from '@/utils/common'
+
+const userGender = stringEnumToArray(UserGender)
 
 const emailSchema: ParamSchema = {
   notEmpty: {
@@ -114,25 +117,20 @@ const phoneSchema: ParamSchema = {
   }
 }
 
-const forgotPasswordTokenSchema: ParamSchema = {
+const forgotPasswordCodeSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value, { req }) => {
       if (!value) {
         throw new ErrorsWithStatus({
-          message: MSG.FORGOT_PASSWORD_TOKEN_IS_REQUIRED,
+          message: MSG.FORGOT_PASSWORD_CODE_IS_REQUIRED,
           status: HTTP_STATUS_CODE.UNAUTHORIZED
         })
       }
       try {
-        const decode_forgot_password_token = await verifyToken({
-          token: value,
-          secretOrPublicKey: CONFIG_ENV.JWT_FORGOT_PASSWORD_TOKEN_SECRET_KEY
-        })
-        const { user_id } = decode_forgot_password_token
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
           where: {
-            id: user_id
+            forgot_password_code: value
           }
         })
         if (user === null) {
@@ -141,13 +139,13 @@ const forgotPasswordTokenSchema: ParamSchema = {
             status: HTTP_STATUS_CODE.NOT_FOUND
           })
         }
-        if (user.forgot_password_token !== value) {
+        if (user.forgot_password_code !== value) {
           throw new ErrorsWithStatus({
-            message: MSG.FORGOT_PASSWORD_TOKEN_INVALID,
+            message: MSG.FORGOT_PASSWORD_CODE_INVALID,
             status: HTTP_STATUS_CODE.UNAUTHORIZED
           })
         }
-        ;(req as Request).decode_forgot_password_token = decode_forgot_password_token
+        ;(req as Request).user = user
         return true
       } catch (error) {
         if (error instanceof JsonWebTokenError) {
@@ -299,7 +297,17 @@ export const registerValidator = validate(
           }
         }
       },
-      password: passwordSchema
+      password: passwordSchema,
+      date_of_birth: dateOfBirthSchema,
+      gender: {
+        notEmpty: {
+          errorMessage: MSG.GENDER_IS_REQUIRED
+        },
+        isIn: {
+          options: [userGender],
+          errorMessage: MSG.GENDER_INVALID
+        }
+      }
     },
     ['body']
   )
@@ -333,7 +341,7 @@ export const forgotPasswordValidator = validate(
 export const resetPasswordValidator = validate(
   checkSchema(
     {
-      forgot_password_token: forgotPasswordTokenSchema,
+      forgot_password_code: forgotPasswordCodeSchema,
       password: passwordSchema
     },
     ['body']

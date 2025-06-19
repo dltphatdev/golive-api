@@ -39,7 +39,11 @@ const MSG = {
   PHONE_MUST_BE_STRING: 'Phone must be string',
   ADDRESS_LENGTH: 'Address maximum 160 characters and minimum 1 characters',
   PHONE_LENGTH: 'Phone maximum 10 characters and minimum 10 characters',
-  VERIFY_CODE_IS_REQUIRED: 'Verify code is required'
+  VERIFY_CODE_IS_REQUIRED: 'Verify code is required',
+  FORGOT_PASSWORD_CODE_IS_REQUIRED: 'Forgot password code is required',
+  FORGOT_PASSWORD_CODE_INVALID: 'Forgot password code invalid',
+  GENDER_INVALID: 'Gender invalid',
+  GENDER_IS_REQUIRED: 'Gender is required'
 } as const
 
 export default MSG

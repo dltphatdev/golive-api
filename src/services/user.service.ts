@@ -3,7 +3,7 @@ import { TokenType } from '@/constants/enum'
 import MSG from '@/constants/msg'
 import { prisma } from '@/index'
 import { RegisterRequestBody, UpdateProfileReqBody } from '@/models/requests/user.request'
-import { convertToSeconds, generateRandomUppercaseString } from '@/utils/common'
+import { convertToSeconds, generateRandomDigitString, generateRandomUppercaseString } from '@/utils/common'
 import { hashPassword } from '@/utils/crypto'
 import { signToken, verifyToken } from '@/utils/jwt'
 import { forgotPasswordSendMail, verifySendMail } from '@/utils/mailer'
@@ -65,33 +65,6 @@ class UserService {
     return verifyToken({ token: refresh_token, secretOrPublicKey: CONFIG_ENV.JWT_REFRESH_TOKEN_SECRET_KEY })
   }
 
-  private signEmailVerifyToken({ user_id, verify }: { user_id: number; verify: UserVerifyStatus }) {
-    return signToken({
-      payload: {
-        user_id,
-        verify,
-        token_type: TokenType.EmailVerifyToken
-      },
-      privateKey: CONFIG_ENV.JWT_EMAIL_VERIFY_TOKEN_SECRET_KEY,
-      options: {
-        expiresIn: CONFIG_ENV.JWT_EMAIL_VERIFY_TOKEN_EXPIRES_IN
-      }
-    })
-  }
-
-  private signForgotPasswordToken(user_id: number) {
-    return signToken({
-      payload: {
-        user_id,
-        token_type: TokenType.ForgotPasswordToken
-      },
-      privateKey: CONFIG_ENV.JWT_FORGOT_PASSWORD_TOKEN_SECRET_KEY,
-      options: {
-        expiresIn: CONFIG_ENV.JWT_FORGOT_PASSWORD_TOKEN_EXPIRES_IN
-      }
-    })
-  }
-
   async login({ user_id, verify, remember_me }: { user_id: number; verify: UserVerifyStatus; remember_me?: boolean }) {
     const [access_token, refresh_token] = await Promise.all([
       this.signAccessToken({ user_id, verify, remember_me }),
@@ -149,7 +122,7 @@ class UserService {
   }
 
   async register(payload: RegisterRequestBody) {
-    const verifyCode = generateRandomUppercaseString() // mã 6 ký tự
+    const verifyCode = generateRandomDigitString()
     const { email, password } = payload
     const user = await prisma.user.create({
       data: {
@@ -195,11 +168,11 @@ class UserService {
   }
 
   async forgotPassword({ id, email }: { id: number; email: string }) {
-    const forgot_password_token = await this.signForgotPasswordToken(id)
+    const verifyCode = generateRandomDigitString()
     await Promise.all([
       prisma.user.update({
         data: {
-          forgot_password_token
+          forgot_password_code: verifyCode
         },
         where: {
           id,
@@ -209,7 +182,7 @@ class UserService {
       forgotPasswordSendMail({
         email,
         subject: `Email xác minh lấy lại mật khẩu`,
-        token: forgot_password_token
+        code: verifyCode
       })
     ])
 
@@ -221,7 +194,7 @@ class UserService {
   async resetPassword({ user_id, password }: { user_id: number; password: string }) {
     await prisma.user.update({
       data: {
-        forgot_password_token: null,
+        forgot_password_code: null,
         password: hashPassword(password)
       },
       where: {
