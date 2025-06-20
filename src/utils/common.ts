@@ -1,3 +1,5 @@
+import { CONFIG_ENV } from '@/constants/config'
+import crypto from 'node:crypto'
 type StringEnumType = {
   [key: string]: string
 }
@@ -49,7 +51,7 @@ export function generateRandomUppercaseString(length = 6) {
   return result
 }
 
-export function generateRandomDigitString(length = 6) {
+function generateRandomDigitString(length = 6) {
   const digits = '0123456789'
   let result = ''
   for (let i = 0; i < length; i++) {
@@ -57,4 +59,24 @@ export function generateRandomDigitString(length = 6) {
     result += digits[randomIndex]
   }
   return result
+}
+
+export function generateOtp({
+  expiresInSec = 300,
+  userId = Number(generateRandomDigitString()),
+  createdAt = new Date()
+}: {
+  userId?: number
+  createdAt?: Date
+  expiresInSec?: number
+}): string {
+  /**
+   * Sinh mã OTP 6 chữ số dựa trên userId, createdAt và thời gian hiện tại
+   */
+  const timeSlot = Math.floor(Date.now() / 1000 / expiresInSec) // VD: mỗi 5 phút một slot
+  const input = `${userId}:${createdAt.toISOString()}:${timeSlot}`
+  const hmac = crypto.createHmac('sha256', CONFIG_ENV.OTP_SECRET).update(input).digest('hex')
+
+  const numericCode = parseInt(hmac.slice(-6), 16) % 1000000
+  return numericCode.toString().padStart(6, '0')
 }

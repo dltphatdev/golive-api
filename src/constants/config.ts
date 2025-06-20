@@ -9,6 +9,7 @@ const isProduction = Boolean(options.production)
 
 export const CONFIG_ENV = {
   PORT: process.env.PORT,
+  OTP_SECRET: process.env.OTP_SECRET as string,
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PORT: process.env.MAIL_PORT,
   MAIL_FROM_NAME: process.env.MAIL_FROM_NAME,

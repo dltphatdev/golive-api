@@ -3,7 +3,7 @@ import { TokenType } from '@/constants/enum'
 import MSG from '@/constants/msg'
 import { prisma } from '@/index'
 import { RegisterRequestBody, UpdateProfileReqBody } from '@/models/requests/user.request'
-import { convertToSeconds, generateRandomDigitString, generateRandomUppercaseString } from '@/utils/common'
+import { convertToSeconds, generateOtp } from '@/utils/common'
 import { hashPassword } from '@/utils/crypto'
 import { signToken, verifyToken } from '@/utils/jwt'
 import { forgotPasswordSendMail, verifySendMail } from '@/utils/mailer'
@@ -122,7 +122,7 @@ class UserService {
   }
 
   async register(payload: RegisterRequestBody) {
-    const verifyCode = generateRandomDigitString()
+    const verifyCode = generateOtp({})
     const user = await prisma.user.create({
       data: {
         fullname: payload.fullname,
@@ -172,7 +172,7 @@ class UserService {
   }
 
   async forgotPassword({ id, email }: { id: number; email: string }) {
-    const verifyCode = generateRandomDigitString()
+    const verifyCode = generateOtp({})
     await Promise.all([
       prisma.user.update({
         data: {

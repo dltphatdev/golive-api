@@ -6,6 +6,7 @@ import { PREFIX_API } from '@/constants/path'
 import userRouter from '@/routers/user.route'
 import { defaultErrorHandler } from '@/middlewares/errors.middleware'
 import { CONFIG_ENV } from '@/constants/config'
+import { generateOtp } from '@/utils/common'
 
 initFolder()
 
