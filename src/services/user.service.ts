@@ -176,11 +176,11 @@ class UserService {
     await Promise.all([
       prisma.user.update({
         data: {
-          forgot_password_code: verifyCode
+          forgot_password_code: verifyCode,
+          updated_at: new Date()
         },
         where: {
-          id,
-          updated_at: new Date()
+          id
         }
       }),
       forgotPasswordSendMail({
