@@ -9,16 +9,44 @@ import { signToken, verifyToken } from '@/utils/jwt'
 import { forgotPasswordSendMail, verifySendMail } from '@/utils/mailer'
 import { UserGender, UserVerifyStatus } from '@prisma/client'
 
+interface IToken {
+  user_id: number
+  verify: UserVerifyStatus
+}
+
+interface SignAccessToken extends Pick<IToken, 'user_id' | 'verify'> {
+  remember_me?: boolean
+}
+
+interface SignRefreshToken extends Pick<IToken, 'user_id' | 'verify'> {
+  exp?: number
+}
+
+type SignAccessTokenRefreshToken = Pick<IToken, 'user_id' | 'verify'>
+
+interface Login extends Pick<IToken, 'user_id' | 'verify'> {
+  remember_me?: boolean
+}
+
+interface ForgotPassword {
+  id: number
+  email: string
+}
+
+interface ResetPassword {
+  user_id: number
+  password: string
+}
+
+type ChangePassword = Pick<ResetPassword, 'user_id' | 'password'>
+
+interface UpdateProfile {
+  user_id: number
+  payload: UpdateProfileReqBody
+}
+
 class UserService {
-  private signAccessToken({
-    user_id,
-    verify,
-    remember_me
-  }: {
-    user_id: number
-    verify: UserVerifyStatus
-    remember_me?: boolean
-  }) {
+  private signAccessToken({ user_id, verify, remember_me }: SignAccessToken) {
     return signToken({
       payload: {
         user_id,
@@ -32,7 +60,7 @@ class UserService {
     })
   }
 
-  private signRefreshToken({ user_id, verify, exp }: { user_id: number; verify: UserVerifyStatus; exp?: number }) {
+  private signRefreshToken({ user_id, verify, exp }: SignRefreshToken) {
     if (exp) {
       return signToken({
         payload: {
@@ -57,7 +85,7 @@ class UserService {
     })
   }
 
-  private signAccessTokenRefreshToken({ user_id, verify }: { user_id: number; verify: UserVerifyStatus }) {
+  private signAccessTokenRefreshToken({ user_id, verify }: SignAccessTokenRefreshToken) {
     return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
   }
 
@@ -65,7 +93,7 @@ class UserService {
     return verifyToken({ token: refresh_token, secretOrPublicKey: CONFIG_ENV.JWT_REFRESH_TOKEN_SECRET_KEY })
   }
 
-  async login({ user_id, verify, remember_me }: { user_id: number; verify: UserVerifyStatus; remember_me?: boolean }) {
+  async login({ user_id, verify, remember_me }: Login) {
     const [access_token, refresh_token] = await Promise.all([
       this.signAccessToken({ user_id, verify, remember_me }),
       this.signRefreshToken({ user_id, verify })
@@ -171,7 +199,7 @@ class UserService {
     return Boolean(user)
   }
 
-  async forgotPassword({ id, email }: { id: number; email: string }) {
+  async forgotPassword({ id, email }: ForgotPassword) {
     const verifyCode = generateOtp({})
     await Promise.all([
       prisma.user.update({
@@ -195,7 +223,7 @@ class UserService {
     }
   }
 
-  async resetPassword({ user_id, password }: { user_id: number; password: string }) {
+  async resetPassword({ user_id, password }: ResetPassword) {
     await prisma.user.update({
       data: {
         forgot_password_code: null,
@@ -238,6 +266,7 @@ class UserService {
         verify: true,
         avatar: true,
         address: true,
+        spoint: true,
         phone: true,
         date_of_birth: true,
         created_at: true,
@@ -306,7 +335,7 @@ class UserService {
     }
   }
 
-  async changePassword({ user_id, password }: { user_id: number; password: string }) {
+  async changePassword({ user_id, password }: ChangePassword) {
     await prisma.user.update({
       where: {
         id: user_id
@@ -320,7 +349,7 @@ class UserService {
     }
   }
 
-  async updateProfile({ user_id, payload }: { user_id: number; payload: UpdateProfileReqBody }) {
+  async updateProfile({ user_id, payload }: UpdateProfile) {
     const _payload = payload.date_of_birth ? { ...payload, date_of_birth: new Date(payload.date_of_birth) } : payload
     const user = await prisma.user.update({
       where: {
@@ -338,6 +367,7 @@ class UserService {
         avatar: true,
         address: true,
         phone: true,
+        spoint: true,
         date_of_birth: true,
         created_at: true,
         updated_at: true

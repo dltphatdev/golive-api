@@ -36,9 +36,12 @@ model User {
   address              String?
   phone                String?
   gender               UserGender       @default(Male)
+  spoint               Int              @default(0)
   date_of_birth        DateTime?
   created_at           DateTime         @default(now())
   updated_at           DateTime?
+  stepLogs             StepLog[]
+  streakLogs           StreakLog[]
 
   @@index([password])
 }
@@ -51,4 +54,31 @@ model RefreshToken {
   exp     DateTime
 
   @@index([exp])
+}
+
+model StepLog {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  date          DateTime
+  steps         Int
+  spoint_earned Int      @default(0)
+  start_time    DateTime
+  last_time     DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  user          User     @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, date])
+}
+
+model StreakLog {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  start_date DateTime
+  last_date  DateTime
+  count      Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
 }

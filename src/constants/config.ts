@@ -9,6 +9,7 @@ const isProduction = Boolean(options.production)
 
 export const CONFIG_ENV = {
   PORT: process.env.PORT,
+  SPOINT_DEFAULT: process.env.SPOINT_DEFAULT as string,
   OTP_SECRET: process.env.OTP_SECRET as string,
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PORT: process.env.MAIL_PORT,
@@ -24,3 +25,13 @@ export const CONFIG_ENV = {
   JWT_ACCESS_TOKEN_EXPIRES_IN: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN as StringValue,
   JWT_REFRESH_TOKEN_EXPIRES_IN: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN as StringValue
 } as const
+
+export const STREAK_BONUS: Record<number, number> = {
+  2: 200,
+  7: 700,
+  10: 1000,
+  15: 1500,
+  30: 3000,
+  60: 6000,
+  100: 10000
+}

@@ -6,7 +6,7 @@ import { PREFIX_API } from '@/constants/path'
 import userRouter from '@/routers/user.route'
 import { defaultErrorHandler } from '@/middlewares/errors.middleware'
 import { CONFIG_ENV } from '@/constants/config'
-import { generateOtp } from '@/utils/common'
+import stepRouter from '@/routers/step.route'
 
 initFolder()
 
@@ -22,6 +22,7 @@ app.use(
 )
 app.use(express.json())
 app.use(`${PREFIX_API}`, userRouter)
+app.use(`${PREFIX_API}`, stepRouter)
 app.use(defaultErrorHandler)
 
 app.listen(Number(port), '0.0.0.0', () => {

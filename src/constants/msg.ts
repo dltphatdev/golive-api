@@ -44,7 +44,13 @@ const MSG = {
   FORGOT_PASSWORD_CODE_INVALID: 'Forgot password code invalid',
   GENDER_INVALID: 'Gender invalid',
   GENDER_IS_REQUIRED: 'Gender is required',
-  REMEMBER_ME_IS_BOOLEAN: 'Remember must be a boolean (true or false)'
+  REMEMBER_ME_IS_BOOLEAN: 'Remember must be a boolean (true or false)',
+  START_TIME_STEP_LOG_IS_ISO8601: 'Start time step log is ISO8601',
+  LAST_TIME_STEP_LOG_IS_ISO8601: 'Last time step log is ISO8601',
+  STEPS_MUST_BE_INT: 'Steps must be interger',
+  STEPS_GREATER_THAN_1: 'Steps greater than 1',
+  UPDATE_STEP_SUCCESS: 'Update step success',
+  GET_STEP_SUCCESS: 'Get step success'
 } as const
 
 export default MSG
