@@ -12,7 +12,7 @@ const stepRouter = Router()
  * Path: /update
  * Method: PUT
  * Request header: { Authorization: Bearer <access_token> }
- * Request body: { start_time: string; end_time: string; steps: number }
+ * Request body: { start_time: string; last_time: string; steps: number }
  * */
 stepRouter.put(
   `${PREFIX_STEP_LOG}/update`,
