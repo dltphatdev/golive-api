@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 22, 2025 at 07:32 AM
+-- Generation Time: Jun 24, 2025 at 04:30 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -35,6 +35,14 @@ CREATE TABLE `refreshtoken` (
   `exp` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `refreshtoken`
+--
+
+INSERT INTO `refreshtoken` (`id`, `token`, `user_id`, `iat`, `exp`) VALUES
+(51, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoiVmVyaWZpZWQiLCJpYXQiOjE3NTA3NzUwNzUsImV4cCI6MTc1MzM2NzA3NX0.nKYnl7GAElju9PGrnuIqvxo15X2SiFGh18PspYn5KnA', 20, '2025-06-24 14:24:35.000', '2025-07-24 14:24:35.000'),
+(52, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoiVmVyaWZpZWQiLCJpYXQiOjE3NTA3NzU1OTIsImV4cCI6MTc1MzM2NzU5Mn0.UKQutgH6oYtKeCkGzzkLU6xxLYOPCze7HqFqeqczLNc', 20, '2025-06-24 14:33:12.000', '2025-07-24 14:33:12.000');
+
 -- --------------------------------------------------------
 
 --
@@ -53,6 +61,18 @@ CREATE TABLE `steplog` (
   `last_time` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `steplog`
+--
+
+INSERT INTO `steplog` (`id`, `user_id`, `date`, `steps`, `spoint_earned`, `start_time`, `created_at`, `updated_at`, `last_time`) VALUES
+(2, 20, '2025-06-23 17:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-23 17:09:25.068', '2025-06-23 13:40:26.647', '2025-06-23 13:40:23.088'),
+(6, 20, '2025-06-24 00:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-24 13:57:19.380', '2025-06-24 14:17:12.309', '2025-06-24 14:17:07.965'),
+(7, 21, '2025-06-24 00:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-24 14:13:56.354', '2025-06-24 14:13:56.386', '2025-06-24 14:13:52.623'),
+(8, 22, '2025-06-24 00:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-24 14:14:40.413', '2025-06-24 14:14:40.446', '2025-06-24 14:14:36.808'),
+(9, 23, '2025-06-24 00:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-24 14:15:12.237', '2025-06-24 14:15:12.285', '2025-06-24 14:15:08.658'),
+(10, 24, '2025-06-24 00:00:00.000', 5000, 5000, '2025-06-23 17:00:00.000', '2025-06-24 14:22:40.384', '2025-06-24 14:24:06.019', '2025-06-24 14:24:02.454');
+
 -- --------------------------------------------------------
 
 --
@@ -68,6 +88,17 @@ CREATE TABLE `streaklog` (
   `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updated_at` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `streaklog`
+--
+
+INSERT INTO `streaklog` (`id`, `user_id`, `start_date`, `last_date`, `count`, `created_at`, `updated_at`) VALUES
+(3, 20, '2025-06-24 00:00:00.000', '2025-06-24 00:00:00.000', 1, '2025-06-24 14:07:23.589', '2025-06-24 14:07:23.589'),
+(4, 21, '2025-06-24 00:00:00.000', '2025-06-24 00:00:00.000', 1, '2025-06-24 14:13:56.438', '2025-06-24 14:13:56.438'),
+(5, 22, '2025-06-24 00:00:00.000', '2025-06-24 00:00:00.000', 1, '2025-06-24 14:14:40.481', '2025-06-24 14:14:40.481'),
+(6, 23, '2025-06-24 00:00:00.000', '2025-06-24 00:00:00.000', 1, '2025-06-24 14:15:12.320', '2025-06-24 14:15:12.320'),
+(7, 24, '2025-06-24 00:00:00.000', '2025-06-24 00:00:00.000', 1, '2025-06-24 14:24:06.065', '2025-06-24 14:24:06.065');
 
 -- --------------------------------------------------------
 
@@ -98,7 +129,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `password`, `fullname`, `verify`, `avatar`, `address`, `phone`, `date_of_birth`, `created_at`, `updated_at`, `verify_code`, `forgot_password_code`, `gender`, `spoint`) VALUES
-(20, 'dolamthanhphat@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Phat dev', 'Verified', NULL, NULL, '0704138356', '1998-01-29 17:00:00.000', '2025-06-19 17:45:31.994', '2025-06-21 15:27:45.495', NULL, NULL, 'Male', 0);
+(20, 'dolamthanhphat@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Đỗ Lâm Thành Phát', 'Verified', NULL, NULL, '0704138356', '1998-01-29 17:00:00.000', '2025-06-19 17:45:31.994', '2025-06-21 15:27:45.495', NULL, NULL, 'Male', 5000),
+(21, 'van@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Nguyễn Thị Tuyết Vân', 'Verified', NULL, NULL, '0987654123', '2025-06-24 21:09:13.000', '2025-06-24 21:09:13.000', '2025-06-24 21:09:13.000', NULL, NULL, 'FeMale', 5000),
+(22, 'phi@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Nguyễn Nhược Phi', 'Verified', NULL, NULL, '0987654221', '2025-06-24 21:10:23.000', '2025-06-24 21:10:23.000', '2025-06-24 21:10:23.000', NULL, NULL, 'Male', 5000),
+(23, 'tuyet@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Ánh Tuyết', 'Verified', NULL, NULL, '0987654331', '2025-06-24 21:11:05.000', '2025-06-24 21:11:05.000', '2025-06-24 21:11:05.000', NULL, NULL, 'FeMale', 5000),
+(24, 'huy@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Nguyen Huy', 'Verified', NULL, NULL, '0987654321', '2025-06-24 21:21:29.000', '2025-06-24 21:21:29.000', '2025-06-24 21:21:29.000', NULL, NULL, 'Male', 5000);
 
 -- --------------------------------------------------------
 
@@ -183,25 +218,25 @@ ALTER TABLE `_prisma_migrations`
 -- AUTO_INCREMENT for table `refreshtoken`
 --
 ALTER TABLE `refreshtoken`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `steplog`
 --
 ALTER TABLE `steplog`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `streaklog`
 --
 ALTER TABLE `streaklog`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables

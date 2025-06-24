@@ -1,7 +1,9 @@
 import { CONFIG_ENV, STREAK_BONUS } from '@/constants/config'
 import { prisma } from '@/index'
 import { UpdateStepReqBody } from '@/models/requests/step.request'
+import { startOfUTCDate } from '@/utils/common'
 import dayjs from 'dayjs'
+import { capitalize } from 'lodash'
 
 interface UpdateReqService extends Pick<UpdateStepReqBody, 'steps' | 'last_time' | 'start_time'> {
   user_id: number
@@ -46,8 +48,8 @@ class StepService {
   async update({ user_id, start_time, last_time, steps }: UpdateReqService) {
     const startTimeStep = new Date(start_time)
     const lastTimeStep = new Date(last_time)
-    const today = dayjs().startOf('day').toDate()
-    const yesterday = dayjs().subtract(1, 'day').startOf('day').toDate()
+    const today = startOfUTCDate()
+    const yesterday = startOfUTCDate(dayjs().subtract(1, 'day').toDate())
     let stepLog = await prisma.stepLog.findUnique({
       where: {
         user_id_date: {
@@ -70,20 +72,22 @@ class StepService {
         }
       })
     } else {
-      // Nếu đã có log → cập nhật
-      stepLog = await prisma.stepLog.update({
-        where: {
-          user_id_date: {
-            user_id,
-            date: today
+      // Nếu đã có log → cập nhật và step < 5000
+      if (steps > stepLog.steps && stepLog.steps < 5000) {
+        stepLog = await prisma.stepLog.update({
+          where: {
+            user_id_date: {
+              user_id,
+              date: today
+            }
+          },
+          data: {
+            steps,
+            start_time: stepLog.start_time ?? startTimeStep, // chỉ ghi start_time nếu chưa có
+            last_time: lastTimeStep
           }
-        },
-        data: {
-          steps,
-          start_time: stepLog.start_time ?? startTimeStep, // chỉ ghi start_time nếu chưa có
-          last_time: lastTimeStep
-        }
-      })
+        })
+      }
     }
 
     let totalSpoint = 0
@@ -166,8 +170,8 @@ class StepService {
   }
 
   async getSteps({ user_id }: GetSteps) {
-    const today = dayjs().startOf('day').toDate()
-    const startChartDate = dayjs().subtract(6, 'day').startOf('day').toDate() // Bắt đầu biểu đồ: 6 ngày trước
+    const today = startOfUTCDate()
+    const startChartDate = startOfUTCDate(dayjs().subtract(6, 'day').toDate()) // Bắt đầu biểu đồ: 6 ngày trước
 
     // - Log bước chân hôm nay
     // - Chuỗi ngày streak
@@ -202,10 +206,12 @@ class StepService {
         .subtract(6 - i, 'day')
         .startOf('day')
       const log = chartLogs.find((l) => dayjs(l.date).isSame(date, 'day'))
+      const chartValue = Math.min(100, Math.round((log?.steps ?? 0 / 5000) * 100))
       chartData.push({
-        date: date.format('YYYY-MM-DD'),
+        date: capitalize(date.format('dddd')),
         steps: log?.steps ?? 0,
-        isCompleted: (log?.steps as number) >= Number(CONFIG_ENV.SPOINT_DEFAULT)
+        isCompleted: (log?.steps as number) >= Number(CONFIG_ENV.SPOINT_DEFAULT),
+        chartValue
       })
     }
 

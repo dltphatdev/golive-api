@@ -7,6 +7,7 @@ import userRouter from '@/routers/user.route'
 import { defaultErrorHandler } from '@/middlewares/errors.middleware'
 import { CONFIG_ENV } from '@/constants/config'
 import stepRouter from '@/routers/step.route'
+import '@/jobs/spointReset.job'
 
 initFolder()
 

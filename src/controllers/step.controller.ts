@@ -18,7 +18,8 @@ export const updateStepController = async (req: Request<ParamsDictionary, any, U
 
 export const getStepsController = async (req: Request, res: Response) => {
   const { user_id } = req.decode_authorization as TokenPayLoad
-  const result = stepService.getSteps({ user_id })
+  const result = await stepService.getSteps({ user_id })
+
   res.json({
     message: MSG.GET_STEP_SUCCESS,
     data: result

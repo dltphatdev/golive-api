@@ -1,11 +1,13 @@
 import argv from 'minimist'
 import { config } from 'dotenv'
 import type { StringValue } from 'ms'
-
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
 config()
 
 const options = argv(process.argv.slice(2))
 const isProduction = Boolean(options.production)
+dayjs.locale('vi')
 
 export const CONFIG_ENV = {
   PORT: process.env.PORT,

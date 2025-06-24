@@ -80,3 +80,7 @@ export function generateOtp({
   const numericCode = parseInt(hmac.slice(-6), 16) % 1000000
   return numericCode.toString().padStart(6, '0')
 }
+
+export function startOfUTCDate(date: Date = new Date()): Date {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+}
