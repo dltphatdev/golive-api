@@ -51,12 +51,10 @@ class StepService {
     const lastTimeStep = new Date(last_time)
     const today = startOfUTCDate()
     const yesterday = startOfUTCDate(dayjs().subtract(1, 'day').toDate())
-    let stepLog = await prisma.stepLog.findUnique({
+    let stepLog = await prisma.stepLog.findFirst({
       where: {
-        user_id_date: {
-          user_id,
-          date: today
-        }
+        user_id,
+        date: today
       }
     })
 

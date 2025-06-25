@@ -8,12 +8,13 @@ import { defaultErrorHandler } from '@/middlewares/errors.middleware'
 import { CONFIG_ENV } from '@/constants/config'
 import stepRouter from '@/routers/step.route'
 import '@/jobs/spointReset.job'
+import serveRouter from '@/routers/serve.route'
 
 initFolder()
 
 export const prisma = new PrismaClient()
 
-const port = CONFIG_ENV.PORT || 8080
+const port = CONFIG_ENV.PORT || 9000
 const app = express()
 app.use(
   cors({
@@ -24,6 +25,7 @@ app.use(
 app.use(express.json())
 app.use(`${PREFIX_API}`, userRouter)
 app.use(`${PREFIX_API}`, stepRouter)
+app.use('', serveRouter)
 app.use(defaultErrorHandler)
 
 app.listen(Number(port), '0.0.0.0', () => {

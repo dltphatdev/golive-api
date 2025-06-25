@@ -37,7 +37,7 @@ stepRouter.get(PREFIX_STEP_LOG, accessTokenValidator, verifiedUserValidator, wra
  * Request header: { Authorization: Bearer <access_token> }
  * */
 stepRouter.get(
-  `${PREFIX_STEP_LOG}/history-activity`,
+  `${PREFIX_STEP_LOG}/history`,
   accessTokenValidator,
   verifiedUserValidator,
   wrapRequestHandler(getHistoryStepLogController)

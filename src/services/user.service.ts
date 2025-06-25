@@ -160,7 +160,7 @@ class UserService {
         email: payload.email,
         password: hashPassword(payload.password),
         verify_code: verifyCode,
-        date_of_birth: payload.date_of_birth,
+        date_of_birth: new Date(payload.date_of_birth),
         verify: UserVerifyStatus.Unverified
       }
     })
