@@ -52,7 +52,9 @@ const MSG = {
   UPDATE_STEP_SUCCESS: 'Update step success',
   GET_STEP_SUCCESS: 'Get step success',
   GET_STEP_LOG_ACTIVITY: 'Get step log activity',
-  GET_LIST_INFO_USER_SUCCESS: 'Get list info user success'
+  GET_LIST_INFO_USER_SUCCESS: 'Get list info user success',
+  CONTENT_MAX_LENGTH: 'Content maximum length 2000 characters',
+  SEND_SUPPORT_SUCCESS: 'Send support success'
 } as const
 
 export default MSG

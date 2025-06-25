@@ -9,6 +9,7 @@ import { CONFIG_ENV } from '@/constants/config'
 import stepRouter from '@/routers/step.route'
 import '@/jobs/spointReset.job'
 import serveRouter from '@/routers/serve.route'
+import supportRouter from '@/routers/support.route'
 
 initFolder()
 
@@ -25,6 +26,7 @@ app.use(
 app.use(express.json())
 app.use(`${PREFIX_API}`, userRouter)
 app.use(`${PREFIX_API}`, stepRouter)
+app.use(`${PREFIX_API}`, supportRouter)
 app.use('', serveRouter)
 app.use(defaultErrorHandler)
 

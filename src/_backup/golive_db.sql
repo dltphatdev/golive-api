@@ -2,10 +2,10 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th6 25, 2025 lúc 10:12 AM
--- Phiên bản máy phục vụ: 8.4.3
--- Phiên bản PHP: 8.3.16
+-- Host: localhost:3306
+-- Generation Time: Jun 25, 2025 at 04:20 PM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `golive_db`
+-- Database: `golive_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `refreshtoken`
+-- Table structure for table `refreshtoken`
 --
 
 CREATE TABLE `refreshtoken` (
@@ -36,7 +36,7 @@ CREATE TABLE `refreshtoken` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `refreshtoken`
+-- Dumping data for table `refreshtoken`
 --
 
 INSERT INTO `refreshtoken` (`id`, `token`, `user_id`, `iat`, `exp`) VALUES
@@ -45,7 +45,7 @@ INSERT INTO `refreshtoken` (`id`, `token`, `user_id`, `iat`, `exp`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `steplog`
+-- Table structure for table `steplog`
 --
 
 CREATE TABLE `steplog` (
@@ -61,7 +61,7 @@ CREATE TABLE `steplog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `steplog`
+-- Dumping data for table `steplog`
 --
 
 INSERT INTO `steplog` (`id`, `user_id`, `date`, `steps`, `spoint_earned`, `start_time`, `created_at`, `updated_at`, `last_time`) VALUES
@@ -77,7 +77,7 @@ INSERT INTO `steplog` (`id`, `user_id`, `date`, `steps`, `spoint_earned`, `start
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `streaklog`
+-- Table structure for table `streaklog`
 --
 
 CREATE TABLE `streaklog` (
@@ -91,7 +91,7 @@ CREATE TABLE `streaklog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `streaklog`
+-- Dumping data for table `streaklog`
 --
 
 INSERT INTO `streaklog` (`id`, `user_id`, `start_date`, `last_date`, `count`, `created_at`, `updated_at`) VALUES
@@ -104,7 +104,30 @@ INSERT INTO `streaklog` (`id`, `user_id`, `start_date`, `last_date`, `count`, `c
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `user`
+-- Table structure for table `support`
+--
+
+CREATE TABLE `support` (
+  `id` int NOT NULL,
+  `fullname` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
+  `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `support`
+--
+
+INSERT INTO `support` (`id`, `fullname`, `email`, `phone`, `address`, `content`, `created_at`) VALUES
+(1, 'Nguyen A', 'abc@gmail.com', '0987654321', 'hcm', 'anc', '2025-06-25 15:43:01.710');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -126,11 +149,11 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `password`, `fullname`, `verify`, `avatar`, `address`, `phone`, `date_of_birth`, `created_at`, `updated_at`, `verify_code`, `forgot_password_code`, `gender`, `spoint`) VALUES
-(20, 'dolamthanhphat@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Đỗ Lâm Thành Phát', 'Verified', 'bnak4zh7w75dn8qlnj2f74xqv.jpg', 'Hcm city', '0704138356', '1998-01-29 17:00:00.000', '2025-06-19 17:45:31.994', '2025-06-25 09:44:57.874', NULL, NULL, 'Male', 10200),
+(20, 'dolamthanhphat@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Đỗ Lâm Thành Phát', 'Verified', NULL, 'Hcm city', '0704138356', '1998-01-29 17:00:00.000', '2025-06-19 17:45:31.994', '2025-06-25 15:43:38.002', NULL, NULL, 'Male', 10200),
 (21, 'van@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Nguyễn Thị Tuyết Vân', 'Verified', NULL, NULL, '0987654123', '2025-06-24 21:09:13.000', '2025-06-24 21:09:13.000', '2025-06-24 21:09:13.000', NULL, NULL, 'FeMale', 10200),
 (22, 'phi@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Nguyễn Nhược Phi', 'Verified', NULL, NULL, '0987654221', '2025-06-24 21:10:23.000', '2025-06-24 21:10:23.000', '2025-06-24 21:10:23.000', NULL, NULL, 'Male', 5000),
 (23, 'tuyet@gmail.com', 'ec9025221b8d3ae779f0b8d06555f26efb0166e4d2425d7aa2c351783f4b2c8b', 'Ánh Tuyết', 'Verified', NULL, NULL, '0987654331', '2025-06-24 21:11:05.000', '2025-06-24 21:11:05.000', '2025-06-24 21:11:05.000', NULL, NULL, 'FeMale', 5000),
@@ -139,7 +162,7 @@ INSERT INTO `user` (`id`, `email`, `password`, `fullname`, `verify`, `avatar`, `
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `_prisma_migrations`
+-- Table structure for table `_prisma_migrations`
 --
 
 CREATE TABLE `_prisma_migrations` (
@@ -154,7 +177,7 @@ CREATE TABLE `_prisma_migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `_prisma_migrations`
+-- Dumping data for table `_prisma_migrations`
 --
 
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
@@ -162,8 +185,10 @@ INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_na
 ('461ac734-ac8f-452b-a96b-8a9ff824ab61', 'a05e0c8ee8058e3308a75f9e9bfc20c44537269fc4d5f3af0bfdb46c1276619b', '2025-06-20 14:48:13.373', '20250620144808_update_user_schema', NULL, NULL, '2025-06-20 14:48:13.061', 1),
 ('621391b0-e644-434f-848e-74e6e16ef3cc', '809770c15bafb75dbe516a1675692ff010ff3b01760c262b0ec7ddeb8719f802', '2025-06-22 03:00:21.902', '20250622030014_create_step_log_and_streak_log_schema', NULL, NULL, '2025-06-22 03:00:19.087', 1),
 ('64ec9318-6156-480d-822e-4504a7857600', '1e1898b78335ac034d8ab346c15170d2e6fbf8999ed9f9fe33751fe3f11953ec', '2025-06-19 13:27:48.557', '20250619132743_update_schema_user', NULL, NULL, '2025-06-19 13:27:48.130', 1),
+('6afa8d04-b696-4ace-9e49-0e87b3684e31', '7d92f14cb7a7b79bf7c6f5a55cc36d305f80b3a52e704a7c4303b042a78ffdee', '2025-06-25 14:56:40.500', '20250625145631_create_support_schema_update', NULL, NULL, '2025-06-25 14:56:40.213', 1),
 ('7e1185c4-686c-4045-b8e6-a0399a8eeebf', 'f89ed3d1a69aca306e684d2b30053d8a8aa266a1137c1218eff8951886cd05fd', '2025-06-15 14:02:39.820', '20250615140238_update_init', NULL, NULL, '2025-06-15 14:02:39.434', 1),
 ('8394a6fb-7337-46c5-8079-053afd30c2a9', '255f6ad3ba7d0d3429b7637bbe78c174078f5a088f86009613818408364d8d6c', '2025-06-22 03:57:42.545', '20250622035734_update_schema_step_log', NULL, NULL, '2025-06-22 03:57:41.877', 1),
+('88fb5a12-9545-483d-ae42-6439bfd046cd', '73a5daebf6be2f1798f19150c60894e976a9334fc3e619a07d510f1030cb60a7', '2025-06-25 14:45:03.629', '20250625144452_create_support_schema', NULL, NULL, '2025-06-25 14:45:02.744', 1),
 ('92826674-77d4-49d6-b051-4044a566bffc', 'a5b6dfdc22df9bac0ca3e9406e022aab21c6590080a2313cfe1adb7704d86a9a', '2025-06-16 14:10:36.412', '20250616141033_update_field_phone_user_schema', NULL, NULL, '2025-06-16 14:10:35.500', 1),
 ('a0a83e92-3e79-44e0-85f2-b0b88a000c79', '2587598686e579e7eacefc331a05e09c87a1db5314547a6c5cd4eeb6477edb40', '2025-06-15 14:01:53.040', '20250615140151_init', NULL, NULL, '2025-06-15 14:01:52.141', 1),
 ('a8d0ba1a-36fa-413a-9704-985d3b191c63', '6f5d5594c97b8429602d5650f5de7a61b58d0bb69cfdee114eb5b8345312574c', '2025-06-16 14:38:44.336', '20250616143841_add_field_email_verify_token_and_forgot_password_token', NULL, NULL, '2025-06-16 14:38:43.671', 1),
@@ -172,11 +197,11 @@ INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_na
 ('fd5b8899-2203-4ca0-9eb1-99542d0d987e', 'c7dc47e9bc13679df91aac9bac4ffbfd5567f2d6bd843c563c269f2f9953bb97', '2025-06-18 16:54:12.458', '20250618165407_update_schema_user_add_code_verify', NULL, NULL, '2025-06-18 16:54:12.051', 1);
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `refreshtoken`
+-- Indexes for table `refreshtoken`
 --
 ALTER TABLE `refreshtoken`
   ADD PRIMARY KEY (`id`),
@@ -184,21 +209,27 @@ ALTER TABLE `refreshtoken`
   ADD KEY `RefreshToken_exp_idx` (`exp`);
 
 --
--- Chỉ mục cho bảng `steplog`
+-- Indexes for table `steplog`
 --
 ALTER TABLE `steplog`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `StepLog_user_id_date_key` (`user_id`,`date`);
 
 --
--- Chỉ mục cho bảng `streaklog`
+-- Indexes for table `streaklog`
 --
 ALTER TABLE `streaklog`
   ADD PRIMARY KEY (`id`),
   ADD KEY `StreakLog_user_id_fkey` (`user_id`);
 
 --
--- Chỉ mục cho bảng `user`
+-- Indexes for table `support`
+--
+ALTER TABLE `support`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
@@ -206,51 +237,57 @@ ALTER TABLE `user`
   ADD KEY `User_password_idx` (`password`);
 
 --
--- Chỉ mục cho bảng `_prisma_migrations`
+-- Indexes for table `_prisma_migrations`
 --
 ALTER TABLE `_prisma_migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `refreshtoken`
+-- AUTO_INCREMENT for table `refreshtoken`
 --
 ALTER TABLE `refreshtoken`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
--- AUTO_INCREMENT cho bảng `steplog`
+-- AUTO_INCREMENT for table `steplog`
 --
 ALTER TABLE `steplog`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT cho bảng `streaklog`
+-- AUTO_INCREMENT for table `streaklog`
 --
 ALTER TABLE `streaklog`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT cho bảng `user`
+-- AUTO_INCREMENT for table `support`
+--
+ALTER TABLE `support`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- Ràng buộc đối với các bảng kết xuất
+-- Constraints for dumped tables
 --
 
 --
--- Ràng buộc cho bảng `steplog`
+-- Constraints for table `steplog`
 --
 ALTER TABLE `steplog`
   ADD CONSTRAINT `StepLog_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `streaklog`
+-- Constraints for table `streaklog`
 --
 ALTER TABLE `streaklog`
   ADD CONSTRAINT `StreakLog_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
