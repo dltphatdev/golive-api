@@ -1,5 +1,5 @@
 import { PREFIX_STEP_LOG } from '@/constants/path'
-import { getStepsController, updateStepController } from '@/controllers/step.controller'
+import { getHistoryStepLogController, getStepsController, updateStepController } from '@/controllers/step.controller'
 import { updateStepLogValidator } from '@/middlewares/step.middleware'
 import { accessTokenValidator, verifiedUserValidator } from '@/middlewares/user.middleware'
 import { wrapRequestHandler } from '@/utils/handler'
@@ -29,5 +29,18 @@ stepRouter.put(
  * Request header: { Authorization: Bearer <access_token> }
  * */
 stepRouter.get(PREFIX_STEP_LOG, accessTokenValidator, verifiedUserValidator, wrapRequestHandler(getStepsController))
+
+/**
+ * Description: Get history of step log
+ * Path: /history
+ * Method: GET
+ * Request header: { Authorization: Bearer <access_token> }
+ * */
+stepRouter.get(
+  `${PREFIX_STEP_LOG}/history-activity`,
+  accessTokenValidator,
+  verifiedUserValidator,
+  wrapRequestHandler(getHistoryStepLogController)
+)
 
 export default stepRouter

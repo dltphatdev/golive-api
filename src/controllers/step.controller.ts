@@ -26,3 +26,15 @@ export const getStepsController = async (req: Request, res: Response) => {
   })
   return
 }
+
+export const getHistoryStepLogController = async (req: Request, res: Response) => {
+  const { user_id } = req.decode_authorization as TokenPayLoad
+  const result = await stepService.getHistoryLog({ user_id })
+  res.json({
+    message: MSG.GET_STEP_LOG_ACTIVITY,
+    data: {
+      logs: result
+    }
+  })
+  return
+}

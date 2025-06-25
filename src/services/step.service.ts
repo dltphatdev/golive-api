@@ -11,6 +11,7 @@ interface UpdateReqService extends Pick<UpdateStepReqBody, 'steps' | 'last_time'
 
 type GetSteps = Pick<UpdateReqService, 'user_id'>
 
+type GetHistoryLog = Pick<UpdateReqService, 'user_id'>
 class StepService {
   private async getCurrentStreakCount(user_id: number) {
     const today = dayjs().startOf('day')
@@ -223,6 +224,33 @@ class StepService {
       chartData,
       lastStreakCount
     }
+  }
+
+  async getHistoryLog({ user_id }: GetHistoryLog) {
+    const logs = await prisma.stepLog.findMany({
+      where: {
+        user_id
+      },
+      select: {
+        id: true,
+        user_id: true,
+        date: true,
+        steps: true,
+        spoint_earned: true,
+        start_time: true,
+        last_time: true,
+        created_at: true,
+        updated_at: true,
+        user: {
+          select: {
+            spoint: true
+          }
+        }
+      },
+      orderBy: { date: 'desc' },
+      take: 10
+    })
+    return logs
   }
 }
 

@@ -125,3 +125,14 @@ export const updateProfileController = async (
   res.json(result)
   return
 }
+
+export const getListRankSpointUserController = async (req: Request, res: Response) => {
+  const users = await userService.getListRankSpointUser()
+  res.json({
+    message: MSG.GET_LIST_INFO_USER_SUCCESS,
+    data: {
+      users
+    }
+  })
+  return
+}

@@ -50,7 +50,9 @@ const MSG = {
   STEPS_MUST_BE_INT: 'Steps must be interger',
   STEPS_GREATER_THAN_1: 'Steps greater than 1',
   UPDATE_STEP_SUCCESS: 'Update step success',
-  GET_STEP_SUCCESS: 'Get step success'
+  GET_STEP_SUCCESS: 'Get step success',
+  GET_STEP_LOG_ACTIVITY: 'Get step log activity',
+  GET_LIST_INFO_USER_SUCCESS: 'Get list info user success'
 } as const
 
 export default MSG

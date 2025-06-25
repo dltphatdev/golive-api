@@ -112,6 +112,7 @@ class UserService {
           avatar: true,
           address: true,
           phone: true,
+          spoint: true,
           date_of_birth: true,
           created_at: true,
           updated_at: true
@@ -377,6 +378,29 @@ class UserService {
       message: MSG.UPDATE_PROFILE_SUCCESS,
       data: user
     }
+  }
+
+  async getListRankSpointUser() {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        fullname: true,
+        verify: true,
+        avatar: true,
+        address: true,
+        spoint: true,
+        phone: true,
+        date_of_birth: true,
+        created_at: true,
+        updated_at: true
+      },
+      orderBy: {
+        spoint: 'desc'
+      },
+      take: 10
+    })
+    return users
   }
 }
 

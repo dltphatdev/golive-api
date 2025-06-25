@@ -3,6 +3,7 @@ import { PREFIX_USER } from '@/constants/path'
 import {
   changePasswordController,
   forgotPasswordController,
+  getListRankSpointUserController,
   getMeController,
   loginController,
   logoutController,
@@ -128,6 +129,7 @@ userRouter.put(
  * Description: Update profile user
  * Method: PATCH
  * Path: /profile
+ * Request header: { Authorization: Bearer <access_token> }
  * Request body: { refresh_token }
  * */
 userRouter.patch(
@@ -137,6 +139,19 @@ userRouter.patch(
   updateProfileValidator,
   filterMiddleware<UpdateProfileReqBody>(['address', 'avatar', 'date_of_birth', 'fullname', 'phone']),
   wrapRequestHandler(updateProfileController)
+)
+
+/**
+ * Description: Get list rank top 10 spoint current user account
+ * Method: GET
+ * Path: /list-rank
+ * Request header: { Authorization: Bearer <access_token> }
+ * */
+userRouter.get(
+  `${PREFIX_USER}/list-rank`,
+  accessTokenValidator,
+  verifiedUserValidator,
+  wrapRequestHandler(getListRankSpointUserController)
 )
 
 export default userRouter
