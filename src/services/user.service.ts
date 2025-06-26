@@ -84,11 +84,6 @@ class UserService {
       }
     })
   }
-
-  private signAccessTokenRefreshToken({ user_id, verify }: SignAccessTokenRefreshToken) {
-    return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
-  }
-
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({ token: refresh_token, secretOrPublicKey: CONFIG_ENV.JWT_REFRESH_TOKEN_SECRET_KEY })
   }
@@ -152,42 +147,23 @@ class UserService {
 
   async register(payload: RegisterRequestBody) {
     const verifyCode = generateOtp({})
-    const user = await prisma.user.create({
-      data: {
-        fullname: payload.fullname,
-        phone: payload.phone,
-        gender: payload.gender || UserGender.Male,
-        email: payload.email,
-        password: hashPassword(payload.password),
-        verify_code: verifyCode,
-        date_of_birth: new Date(payload.date_of_birth),
-        verify: UserVerifyStatus.Unverified
-      }
-    })
-    const user_id = user.id
-
-    const [access_token, refresh_token] = await this.signAccessTokenRefreshToken({
-      user_id: user_id,
-      verify: UserVerifyStatus.Unverified
-    })
-    const { iat, exp } = await this.decodeRefreshToken(refresh_token)
-    await prisma.refreshToken.create({
-      data: {
-        token: refresh_token,
-        iat: new Date(iat * 1000),
-        exp: new Date(exp * 1000),
-        user_id
-      }
-    })
-    await verifySendMail({ email: payload.email, subject: `Verify your email`, code: user.verify_code as string })
-    const expires_access_token = convertToSeconds(CONFIG_ENV.JWT_ACCESS_TOKEN_EXPIRES_IN)
-    const expires_refresh_token = convertToSeconds(CONFIG_ENV.JWT_REFRESH_TOKEN_EXPIRES_IN)
+    await Promise.all([
+      prisma.user.create({
+        data: {
+          fullname: payload.fullname,
+          phone: payload.phone,
+          gender: payload.gender || UserGender.Male,
+          email: payload.email,
+          password: hashPassword(payload.password),
+          verify_code: verifyCode,
+          date_of_birth: new Date(payload.date_of_birth),
+          verify: UserVerifyStatus.Unverified
+        }
+      }),
+      verifySendMail({ email: payload.email, subject: `Verify your email`, code: verifyCode as string })
+    ])
     return {
-      access_token,
-      refresh_token,
-      expires_access_token,
-      expires_refresh_token,
-      user
+      messgae: MSG.REGISTER_SUCCESS
     }
   }
 

@@ -14,7 +14,6 @@ type GetSteps = Pick<UpdateReqService, 'user_id'>
 type GetHistoryLog = Pick<UpdateReqService, 'user_id'>
 class StepService {
   private async getCurrentStreakCount(user_id: number) {
-    const today = dayjs().startOf('day')
     const daysToCheck = 30 // kiểm tra tối đa 30 ngày gần nhất
 
     // Lấy logs bước chân trong X ngày gần nhất
@@ -22,7 +21,11 @@ class StepService {
       where: {
         user_id,
         date: {
-          gte: today.subtract(daysToCheck - 1, 'day').toDate()
+          gte: startOfUTCDate(
+            dayjs()
+              .subtract(daysToCheck - 1, 'day')
+              .toDate()
+          )
         }
       },
       orderBy: {
@@ -33,11 +36,22 @@ class StepService {
     let streakCount = 0
 
     for (let i = 0; i < daysToCheck; i++) {
-      const checkDate = today.subtract(i, 'day')
+      const checkDate = startOfUTCDate(dayjs().subtract(i, 'day').toDate())
       const log = logs.find((l) => dayjs(l.date).isSame(checkDate, 'day'))
+      const isToday = dayjs().isSame(checkDate, 'day')
+      // Nếu không có log, nhưng hôm nay → vẫn cho tiếp tục (chưa tính là đứt)
+      if (!log) {
+        if (isToday) {
+          continue // chưa hoàn thành, không tính
+        }
+        break // không phải hôm nay, mà không có log → đứt
+      }
 
-      if (!log || log.steps < 5000) {
-        break // bị đứt chuỗi
+      if (log.steps < 5000) {
+        // Nếu là hôm nay mà chưa đủ bước → vẫn tiếp tục
+        if (isToday) continue
+
+        break // các ngày cũ mà <5000 là đứt
       }
 
       streakCount++

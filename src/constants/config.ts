@@ -16,6 +16,7 @@ export const CONFIG_ENV = {
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PORT: process.env.MAIL_PORT,
   MAIL_FROM_NAME: process.env.MAIL_FROM_NAME,
+  MAIL_USERNAME: process.env.MAIL_USERNAME,
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
   MAIL_FROM_ADDRESS: process.env.MAIL_FROM_ADDRESS as string,
   SERVER_URL: process.env.SERVER_URL as string,

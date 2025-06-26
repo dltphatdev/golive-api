@@ -19,10 +19,17 @@ export const sendMail = ({ email, subject, html }: SendMail) => {
   const transporter = nodemailer.createTransport({
     host: CONFIG_ENV.MAIL_HOST,
     port: Number(CONFIG_ENV.MAIL_PORT),
-    secure: false, // true for port 465, false for other ports
+    secure: true,
     auth: {
-      user: CONFIG_ENV.MAIL_FROM_ADDRESS,
+      user: CONFIG_ENV.MAIL_USERNAME,
       pass: CONFIG_ENV.MAIL_PASSWORD
+    },
+    connectionTimeout: 30000,
+    socketTimeout: 30000,
+    greetingTimeout: 10000,
+    requireTLS: true,
+    tls: {
+      rejectUnauthorized: false
     }
   })
 

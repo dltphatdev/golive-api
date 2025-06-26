@@ -19,10 +19,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterRequestBody>, res: Response) => {
   const payload = req.body
   const result = await userService.register(payload)
-  res.json({
-    message: MSG.REGISTER_SUCCESS,
-    data: result
-  })
+  res.json(result)
   return
 }
 
