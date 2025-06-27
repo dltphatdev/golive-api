@@ -30,6 +30,6 @@ app.use(`${PREFIX_API}`, supportRouter)
 app.use('', serveRouter)
 app.use(defaultErrorHandler)
 
-app.listen(Number(port), '0.0.0.0', () => {
+app.listen(Number(port), () => {
   console.log(`Server API running on ${CONFIG_ENV.STATUS} with port ${port}`)
 })
