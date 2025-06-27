@@ -147,23 +147,22 @@ class UserService {
 
   async register(payload: RegisterRequestBody) {
     const verifyCode = generateOtp({})
-    await Promise.all([
-      prisma.user.create({
-        data: {
-          fullname: payload.fullname,
-          phone: payload.phone,
-          gender: payload.gender || UserGender.Male,
-          email: payload.email,
-          password: hashPassword(payload.password),
-          verify_code: verifyCode,
-          date_of_birth: new Date(payload.date_of_birth),
-          verify: UserVerifyStatus.Unverified
-        }
-      }),
-      verifySendMail({ email: payload.email, subject: `Verify your email`, code: verifyCode as string })
-    ])
+    const user = await prisma.user.create({
+      data: {
+        fullname: payload.fullname,
+        phone: payload.phone,
+        gender: payload.gender || UserGender.Male,
+        email: payload.email,
+        password: hashPassword(payload.password),
+        verify_code: verifyCode,
+        date_of_birth: new Date(payload.date_of_birth),
+        verify: UserVerifyStatus.Unverified
+      }
+    })
+    verifySendMail({ email: payload.email, subject: `Verify your email`, code: verifyCode as string })
     return {
-      messgae: MSG.REGISTER_SUCCESS
+      messgae: MSG.REGISTER_SUCCESS,
+      data: user
     }
   }
 
