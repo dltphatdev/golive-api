@@ -3,10 +3,9 @@ import { config } from 'dotenv'
 import type { StringValue } from 'ms'
 import dayjs from 'dayjs'
 import 'dayjs/locale/vi'
-config()
-
 const options = argv(process.argv.slice(2))
-const isProduction = Boolean(options.production)
+export const isProduction = options.production === true
+config()
 dayjs.locale('vi')
 
 export const CONFIG_ENV = {
