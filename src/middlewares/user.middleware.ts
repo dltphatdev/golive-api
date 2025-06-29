@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import MSG from '@/constants/msg'
 import { prisma } from '@/index'
-import { hashPassword } from '@/utils/crypto'
+import { comparePassword, hashPassword } from '@/utils/crypto'
 import { validate } from '@/utils/validation'
 import { checkSchema, ParamSchema } from 'express-validator'
 import { ErrorsWithStatus } from '@/models/Error'
@@ -271,11 +271,14 @@ export const loginValidator = validate(
           options: async (value: string, { req }) => {
             const user = await prisma.user.findUnique({
               where: {
-                email: value,
-                password: hashPassword(req.body.password)
+                email: value
               }
             })
             if (user === null) {
+              throw new Error(MSG.EMAIL_NOT_EXIST)
+            }
+            const isValid = await comparePassword(req.body.password, user.password)
+            if (!isValid) {
               throw new Error(MSG.EMAIL_OR_PASSWORD_INCORRECT)
             }
             ;(req as Request).user = user
@@ -431,7 +434,8 @@ export const changePasswordValidator = validate(
             if (!user) {
               throw new Error(MSG.USER_NOT_FOUND)
             }
-            if (user.password !== hashPassword(value)) {
+            const isValid = await comparePassword(value, user.password)
+            if (!isValid) {
               throw new Error(MSG.OLD_PASSWORD_INCORRECT)
             }
             return true

@@ -1,4 +1,3 @@
-import { CONFIG_ENV } from '@/constants/config'
 import bcrypt from 'bcrypt'
 
 // Mã hóa password
