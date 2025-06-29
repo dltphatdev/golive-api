@@ -147,13 +147,14 @@ class UserService {
 
   async register(payload: RegisterRequestBody) {
     const verifyCode = generateOtp({})
+    const password = await hashPassword(payload.password)
     const user = await prisma.user.create({
       data: {
         fullname: payload.fullname,
         phone: payload.phone,
         gender: payload.gender || UserGender.Male,
         email: payload.email,
-        password: hashPassword(payload.password),
+        password: password,
         verify_code: verifyCode,
         date_of_birth: new Date(payload.date_of_birth),
         verify: UserVerifyStatus.Unverified
@@ -200,10 +201,11 @@ class UserService {
   }
 
   async resetPassword({ user_id, password }: ResetPassword) {
+    const pass = await hashPassword(password)
     await prisma.user.update({
       data: {
         forgot_password_code: null,
-        password: hashPassword(password)
+        password: pass
       },
       where: {
         id: user_id
@@ -312,12 +314,13 @@ class UserService {
   }
 
   async changePassword({ user_id, password }: ChangePassword) {
+    const pass = await hashPassword(password)
     await prisma.user.update({
       where: {
         id: user_id
       },
       data: {
-        password: hashPassword(password)
+        password: pass
       }
     })
     return {
