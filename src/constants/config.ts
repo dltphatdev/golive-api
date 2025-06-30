@@ -11,6 +11,9 @@ dayjs.locale('vi')
 export const CONFIG_ENV = {
   PORT: process.env.PORT,
   SPOINT_DEFAULT: process.env.SPOINT_DEFAULT as string,
+  TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER as string,
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID as string,
+  TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN as string,
   OTP_SECRET: process.env.OTP_SECRET as string,
   MAIL_HOST: process.env.MAIL_HOST,
   MAIL_PORT: process.env.MAIL_PORT,
