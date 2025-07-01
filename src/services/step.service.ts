@@ -220,7 +220,7 @@ class StepService {
       const log = chartLogs.find((l) => dayjs(l.date).isSame(date, 'day'))
       const chartValue = Math.min(100, Math.round((log?.steps ?? 0 / 5000) * 100))
       chartData.push({
-        date: date.format('DD/MM'), // hoặc capitalize(date.format('dddd')) nếu muốn tên thứ
+        date: `${date.date()}/${date.month() + 2}`, // hoặc capitalize(date.format('dddd')) nếu muốn tên thứ
         steps: log?.steps ?? 0,
         isCompleted: (log?.steps ?? 0) >= Number(CONFIG_ENV.SPOINT_DEFAULT),
         chartValue
