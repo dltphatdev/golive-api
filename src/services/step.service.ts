@@ -212,17 +212,17 @@ class StepService {
       })
     ])
 
-    // Chuẩn hóa dữ liệu biểu đồ: lấy đủ 7 ngày từ Thứ Hai tuần trước → Chủ nhật tuần trước, dù không có log
-    const startOfLastWeek = dayjs().startOf('week').subtract(1, 'week') // Thứ 2 tuần trước
+    // Chuẩn hóa dữ liệu biểu đồ: 7 ngày trước đó, dù không có log
     const chartData = []
-    for (let i = 0; i < 7; i++) {
-      const date = startOfLastWeek.add(i, 'day')
+
+    for (let i = 6; i >= 0; i--) {
+      const date = dayjs().subtract(i, 'day')
       const log = chartLogs.find((l) => dayjs(l.date).isSame(date, 'day'))
       const chartValue = Math.min(100, Math.round((log?.steps ?? 0 / 5000) * 100))
       chartData.push({
-        date: capitalize(date.format('dddd')),
+        date: date.format('DD/MM'), // hoặc capitalize(date.format('dddd')) nếu muốn tên thứ
         steps: log?.steps ?? 0,
-        isCompleted: (log?.steps as number) >= Number(CONFIG_ENV.SPOINT_DEFAULT),
+        isCompleted: (log?.steps ?? 0) >= Number(CONFIG_ENV.SPOINT_DEFAULT),
         chartValue
       })
     }
