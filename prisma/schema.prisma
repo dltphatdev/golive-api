@@ -27,7 +27,7 @@ model User {
   streakLogs           StreakLog[]
 
   @@index([password])
-@@map("user")
+  @@map("user")
 }
 
 model RefreshToken {
@@ -38,14 +38,14 @@ model RefreshToken {
   exp     DateTime
 
   @@index([exp])
-@@map("refreshtoken")
+  @@map("refreshtoken")
 }
 
 model StepLog {
   id            Int      @id @default(autoincrement())
   user_id       Int
   date          DateTime
-  steps         Int     
+  steps         Int      @default(0)
   spoint_earned Int      @default(0)
   start_time    DateTime
   last_time     DateTime
@@ -54,7 +54,7 @@ model StepLog {
   user          User     @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, date])
-@@map("steplog")
+  @@map("steplog")
 }
 
 model StreakLog {
@@ -68,7 +68,7 @@ model StreakLog {
   user       User     @relation(fields: [user_id], references: [id])
 
   @@index([user_id], map: "StreakLog_user_id_fkey")
-@@map("streaklog")
+  @@map("streaklog")
 }
 
 model Support {
@@ -79,7 +79,8 @@ model Support {
   address    String?
   content    String?  @db.Text
   created_at DateTime @default(now())
-@@map("support")
+
+  @@map("support")
 }
 
 enum UserVerifyStatus {
