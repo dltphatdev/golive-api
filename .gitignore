@@ -2,6 +2,3 @@ node_modules/
 dist/
 uploads/
 .env*
-prisma/dev.db
-/generated/prisma
-/generated/prisma

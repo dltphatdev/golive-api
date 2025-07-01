@@ -215,7 +215,7 @@ class StepService {
     // Chuẩn hóa dữ liệu biểu đồ: 7 ngày trước đó, dù không có log
     const chartData = []
 
-    for (let i = 6; i >= 0; i--) {
+    for (let i = 7; i >= 1; i--) {
       const date = dayjs().subtract(i, 'day')
       const log = chartLogs.find((l) => dayjs(l.date).isSame(date, 'day'))
       const chartValue = Math.min(100, Math.round((log?.steps ?? 0 / 5000) * 100))

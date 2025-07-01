@@ -43,7 +43,7 @@ model StepLog {
   id            Int      @id @default(autoincrement())
   user_id       Int
   date          DateTime
-  steps         Int
+  steps         Int      @default(0)
   spoint_earned Int      @default(0)
   start_time    DateTime
   last_time     DateTime

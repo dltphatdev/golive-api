@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `steplog` MODIFY `steps` INTEGER NOT NULL DEFAULT 0;
